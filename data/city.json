@@ -1,1 +1,23 @@
-[{"idx":0,"id":"415984f1-0edf-4fa2-8eb8-90260c64ea06","name":"Jhansi","stateId":"03d58e4e-398a-42d4-aeb2-f642f63eab5b","createdAt":"2025-04-24 13:53:26.294","updatedAt":"2025-04-24 13:53:26.294"},{"idx":1,"id":"81324d0e-639d-453c-b3af-a5782b0925c2","name":"Mohali","stateId":"80013824-0336-4214-b9df-3afc82c535f1","createdAt":"2025-04-17 06:52:21.693","updatedAt":"2025-04-17 06:52:21.693"},{"idx":2,"id":"946183d3-d637-403c-b239-66d828400426","name":"Lucknow","stateId":"03d58e4e-398a-42d4-aeb2-f642f63eab5b","createdAt":"2025-04-24 13:59:06.109","updatedAt":"2025-04-24 13:59:06.109"}]
+[
+  {
+    "id": "415984f1-0edf-4fa2-8eb8-90260c64ea06",
+    "name": "Jhansi",
+    "stateId": "03d58e4e-398a-42d4-aeb2-f642f63eab5b",
+    "createdAt": "2025-04-24 13:53:26.294",
+    "updatedAt": "2025-04-24 13:53:26.294"
+  },
+  {
+    "id": "81324d0e-639d-453c-b3af-a5782b0925c2",
+    "name": "Mohali",
+    "stateId": "80013824-0336-4214-b9df-3afc82c535f1",
+    "createdAt": "2025-04-17 06:52:21.693",
+    "updatedAt": "2025-04-17 06:52:21.693"
+  },
+  {
+    "id": "946183d3-d637-403c-b239-66d828400426",
+    "name": "Lucknow",
+    "stateId": "03d58e4e-398a-42d4-aeb2-f642f63eab5b",
+    "createdAt": "2025-04-24 13:59:06.109",
+    "updatedAt": "2025-04-24 13:59:06.109"
+  }
+]
