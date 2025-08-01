@@ -1,0 +1,354 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model AdminInsights {
+  id                     String   @id  @default(uuid())
+  totalBookings          Int      @default(0)
+  confirmedBookings      Int      @default(0)
+  cancelledBookings      Int      @default(0)
+  totalUsers             Int      @default(0)
+  newUsersThisMonth      Int      @default(0)
+  activeHostelsCount     Int      @default(0)
+  bookingConversionRate  Float    @default(0)
+  cancellationRate       Float    @default(0)
+  avgBookingsPerUser     Float    @default(0)
+  trendingHostelId       String?
+  listHostelRequests     Int      @default(0)
+  pendingRequests        Int      @default(0)
+  cancelledRequests      Int      @default(0)
+  ownerHostelRequests    Int      @default(0)
+  pendingOwnerRequests   Int      @default(0)
+  cancelledOwnerRequests Int      @default(0)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model Blog {
+  id        String   @id  @default(uuid())
+  title     String
+  content   String
+  image     String
+  city      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city])
+}
+
+model Booking {
+  id          String        @id   @default(uuid())
+  userId      String
+  hostelName  String
+  hostelId    String
+  roomTypeId  String
+  roomType    RoomCategory
+  roomPrice   Float
+  status      BookingStatus @default(PENDING)
+  referenceId String        @unique
+  phoneNumber String
+  userGender  Gender
+  address     String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  name        String?
+  terms       Boolean       @default(false)
+  Hostel      Hostel        @relation(fields: [hostelId], references: [id])
+  RoomType    RoomType      @relation(fields: [roomTypeId], references: [id])
+  User        User          @relation(fields: [userId], references: [id])
+
+  @@index([roomTypeId])
+  @@index([status])
+}
+
+model CareerApplication {
+  id        String            @id @default(uuid())
+  name      String 
+  email     String
+  phone     String
+  position  String
+  message   String
+  resumeUrl String
+  status    ApplicationStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  userId    String?
+
+  @@index([email])
+  @@index([status])
+}
+
+model City {
+  id        String    @id @default(uuid())
+  name      String
+  stateId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+  State     State    @relation(fields: [stateId], references: [id])
+
+  @@unique([name, stateId])
+}
+
+model Coaching {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  value       String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Hostel {
+  id             String       @id @default(uuid())
+  name           String
+  state          String
+  city           String
+  address        String
+  about          String
+  images         String[]
+  gender         HostelGender
+  isAvailable    Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  nearByCoaching String[]
+  ownerId        String?
+  hostelOwnerId  String?
+  facilities     String[]     @default([])
+  houseRules     String[]     @default([])
+  Bookings       Booking[]
+  HostelOwner    HostelOwner? @relation(fields: [hostelOwnerId], references: [id])
+  User           User?        @relation(fields: [ownerId], references: [id])
+  RoomTypes      RoomType[]
+}
+
+model HostelOwner {
+  id                 String               @id @default(uuid())
+  userId             String               @unique
+  phone              String
+  address            String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime               @updatedAt
+  name               String
+  aadhaarNumber      String               @unique
+  Hostels            Hostel[]
+  User               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  HostelOwnerRequests HostelOwnerRequest[]
+}
+
+model HostelOwnerRequest {
+  id            String        @id @default(uuid())
+  ownerName     String
+  contactEmail  String
+  contactPhone  String
+  hostelName    String
+  message       String
+  status        RequestStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime       @updatedAt
+  address       String
+  city          String
+  state         String
+  userId        String
+  hostelOwnerId String?
+  HostelOwner   HostelOwner?  @relation(fields: [hostelOwnerId], references: [id])
+  User          User          @relation(fields: [userId], references: [id])
+
+  @@index([status])
+}
+
+model ListHostelRequest {
+  id           String        @id @default(uuid())
+  ownerName    String
+  contactEmail String
+  contactPhone String
+  hostelName   String
+  message      String
+  status       RequestStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  address      String
+  city         String
+  state        String
+  userId       String
+
+  @@index([status])
+}
+
+model PushToken {
+  id          String   @id @default(uuid())
+  token       String   @unique
+  userId      String
+  createdAt   DateTime @default(now())
+  lastUpdated DateTime
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model RoomType {
+  id             String       @id @default(uuid())
+  hostelId       String
+  type           RoomCategory
+  price          Float
+  facilities     String[]
+  totalRooms     Int
+  availableRooms Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  images         String[]
+  Bookings       Booking[]
+  Hostel         Hostel       @relation(fields: [hostelId], references: [id])
+
+  @@index([hostelId])
+  @@index([type])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model State {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+  Cities    City[]
+}
+
+model User {
+  id                 String               @id @default(uuid())
+  email              String               @unique
+  password           String
+  username           String               @unique
+  gender             Gender?
+  role               Role                 @default(USER)
+  createdAt          DateTime             @default(now())
+  name               String
+  city               String?
+  state              String?
+  emailVerified      DateTime?
+  pfpUrl             String?
+  Accounts           Account[]
+  Bookings           Booking[]
+  Hostels            Hostel[]
+  HostelOwner        HostelOwner?
+  HostelOwnerRequests HostelOwnerRequest[]
+  PushTokens         PushToken[]
+  Sessions           Session[]
+
+  @@index([email, username])
+}
+
+model VerificationToken {
+  identifier String 
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  SHORTLISTED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum Facility {
+  ALMIRAH
+  ATTACHED_WASHROOM
+  CCTV
+  CHAIR
+  COOLER
+  INVERTER_BACKUP
+  PARKING
+  BIWEEKLY_CLEANING
+  ALL_DAY_ELECTRICITY
+  GENERATOR
+  GEYSER
+  INDOOR_GAMES
+  PILLOW
+  WATER_BY_RO
+  SECURITY_GUARD
+  TABLE
+  WIFI
+  FOOD_INCLUDED
+  BED
+  VEGETARIAN_MESS
+  ALL_DAY_WATER_SUPPLY
+  GYM
+  ALL_DAY_WARDEN
+  AIRCONDITIONER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum HostelGender {
+  BOYS
+  GIRLS
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum Role {
+  USER
+  ADMIN
+  HOSTEL_OWNER
+}
+
+enum RoomCategory {
+  SINGLE
+  DOUBLE
+  TRIPLE
+  QUADRUPLE
+}
