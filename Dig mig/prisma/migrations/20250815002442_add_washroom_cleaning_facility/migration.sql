@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "Facility" ADD VALUE 'WASHROOM_CLEANING';
