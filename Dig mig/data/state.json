@@ -1,0 +1,20 @@
+[
+  {
+    "id": "03d58e4e-398a-42d4-aeb2-f642f63eab5b",
+    "name": "Uttar Pradesh",
+    "createdAt": "2025-04-24T13:53:06.153Z",
+    "updatedAt": "2025-04-24T13:53:06.153Z"
+  },
+  {
+    "id": "6ff761d3-9ca3-4c43-83b8-ad1044c1304c",
+    "name": "Bihar",
+    "createdAt": "2025-04-18T11:35:44.282Z",
+    "updatedAt": "2025-04-18T11:35:44.282Z"
+  },
+  {
+    "id": "80013824-0336-4214-b9df-3afc82c535f1",
+    "name": "Uttarakhand",
+    "createdAt": "2025-04-17T06:52:09.498Z",
+    "updatedAt": "2025-04-17T06:52:09.498Z"
+  }
+]
